@@ -1,0 +1,881 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Professional Freelance Rate Calculator to calculate hourly, daily, monthly and yearly freelance rates.">
+<meta name="theme-color" content="#0f172a">
+<title>Freelance Rate Calculator | AI Tools and Tech Hacks</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#172033;
+  --muted:#64748b;
+  --primary:#4f46e5;
+  --primary2:#7c3aed;
+  --border:#e5e7eb;
+  --dark:#0f172a;
+  --success:#059669;
+}
+body{
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1120px,92%);margin:auto}
+
+/* HEADER */
+header{
+  background:rgba(255,255,255,.95);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
+  backdrop-filter:blur(12px);
+}
+.nav{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-weight:800;
+  font-size:19px;
+}
+.logo{
+  width:43px;height:43px;
+  border-radius:13px;
+  display:grid;place-items:center;
+  color:white;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  box-shadow:0 8px 25px rgba(79,70,229,.25);
+}
+.navlinks{display:flex;gap:22px;align-items:center}
+.navlinks a{font-size:14px;color:#475569;font-weight:600}
+.navlinks a:hover{color:var(--primary)}
+.menu{display:none;border:0;background:none;font-size:25px}
+
+/* HERO */
+.hero{
+  padding:75px 0 45px;
+  text-align:center;
+}
+.badge{
+  display:inline-block;
+  background:#eef2ff;
+  color:#4338ca;
+  padding:7px 14px;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+.hero h1{
+  font-size:clamp(38px,6vw,66px);
+  line-height:1.05;
+  letter-spacing:-2px;
+  margin-bottom:18px;
+}
+.gradient{
+  background:linear-gradient(90deg,#4f46e5,#7c3aed);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.hero p{
+  max-width:760px;
+  margin:auto;
+  color:var(--muted);
+  font-size:17px;
+}
+
+/* CALCULATOR */
+.calculator{
+  margin:20px auto 70px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:25px;
+  box-shadow:0 20px 60px rgba(15,23,42,.08);
+  overflow:hidden;
+}
+.calc-top{
+  padding:25px 30px;
+  background:linear-gradient(135deg,#111827,#1e293b);
+  color:white;
+}
+.calc-top h2{font-size:25px}
+.calc-top p{color:#cbd5e1;font-size:14px;margin-top:5px}
+.form{
+  padding:30px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:7px;
+}
+.field input,.field select{
+  width:100%;
+  padding:14px 15px;
+  border:1px solid #dbe1ea;
+  border-radius:12px;
+  outline:none;
+  font-size:15px;
+  background:white;
+}
+.field input:focus,.field select:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(79,70,229,.1);
+}
+.full{grid-column:1/-1}
+.options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:0 30px 30px;
+}
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:14px 21px;
+  cursor:pointer;
+  font-weight:800;
+  font-size:14px;
+}
+.primary{
+  color:white;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+}
+.secondary{background:#eef2f7;color:#334155}
+.btn:hover{transform:translateY(-1px)}
+
+/* RESULTS */
+.results{
+  display:none;
+  padding:0 30px 30px;
+}
+.results.show{display:block}
+.result-main{
+  background:linear-gradient(135deg,#eef2ff,#f5f3ff);
+  border:1px solid #ddd6fe;
+  border-radius:18px;
+  padding:25px;
+  text-align:center;
+  margin-bottom:18px;
+}
+.result-main small{color:#64748b;font-weight:700}
+.result-main strong{
+  display:block;
+  font-size:42px;
+  color:#4338ca;
+  margin:4px 0;
+}
+.result-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.result-card{
+  border:1px solid var(--border);
+  padding:18px;
+  border-radius:15px;
+  background:white;
+}
+.result-card span{font-size:12px;color:var(--muted);display:block}
+.result-card b{font-size:20px;margin-top:5px;display:block}
+
+/* SECTIONS */
+.section{padding:65px 0}
+.section-title{text-align:center;margin-bottom:35px}
+.section-title h2{font-size:34px;letter-spacing:-1px}
+.section-title p{color:var(--muted);margin-top:8px}
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+.feature,.example,.legal{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:24px;
+}
+.icon{
+  width:45px;height:45px;
+  display:grid;place-items:center;
+  background:#eef2ff;
+  border-radius:12px;
+  margin-bottom:15px;
+  font-size:21px;
+}
+.feature h3{margin-bottom:7px}
+.feature p,.example p,.legal p{color:var(--muted);font-size:14px}
+.examples{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+.example h3{margin-bottom:8px}
+.example strong{color:var(--primary)}
+
+/* TOOLS */
+.tools{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+.tool{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  transition:.2s;
+}
+.tool:hover{
+  transform:translateY(-3px);
+  border-color:#c7d2fe;
+  box-shadow:0 10px 30px rgba(15,23,42,.07);
+}
+.tool span{font-weight:800}
+.tool small{color:var(--primary);font-weight:800}
+
+/* FAQ */
+.faq{
+  max-width:800px;
+  margin:auto;
+}
+details{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:13px;
+  margin-bottom:10px;
+  padding:17px 20px;
+}
+summary{font-weight:800;cursor:pointer}
+details p{color:var(--muted);padding-top:10px;font-size:14px}
+
+/* FOOTER */
+footer{
+  background:var(--dark);
+  color:white;
+  margin-top:50px;
+  padding:50px 0 25px;
+}
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:35px;
+}
+footer h3{margin-bottom:12px}
+footer p,footer a{color:#94a3b8;font-size:14px}
+footer a{display:block;margin:7px 0}
+.copyright{
+  border-top:1px solid #263244;
+  margin-top:35px;
+  padding-top:20px;
+  text-align:center;
+  color:#64748b;
+  font-size:13px;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.65);
+  z-index:500;
+  padding:30px;
+  overflow:auto;
+}
+.modal-box{
+  max-width:700px;
+  margin:40px auto;
+  background:white;
+  border-radius:20px;
+  padding:30px;
+}
+.modal-box h2{margin-bottom:15px}
+.close{
+  float:right;
+  border:0;background:#f1f5f9;
+  width:35px;height:35px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:20px;
+}
+
+/* MOBILE */
+@media(max-width:800px){
+  .navlinks{display:none}
+  .menu{display:block}
+  .navlinks.open{
+    display:flex;
+    position:absolute;
+    left:0;right:0;top:72px;
+    background:white;
+    padding:20px;
+    flex-direction:column;
+    border-bottom:1px solid var(--border);
+  }
+  .form{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .options,.result-grid,.features,.examples,.tools,.footer-grid{
+    grid-template-columns:1fr;
+  }
+  .hero{padding:55px 0 30px}
+  .hero h1{letter-spacing:-1px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="#" class="brand">
+      <div class="logo">FR</div>
+      <span>Freelance Rate Calculator</span>
+    </a>
+
+    <button class="menu" onclick="toggleMenu()">☰</button>
+
+    <nav class="navlinks" id="navlinks">
+      <a href="#calculator">Calculator</a>
+      <a href="#features">Features</a>
+      <a href="#examples">Examples</a>
+      <a href="#tools">More Free Tools</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="container">
+    <div class="badge">FREE • PROFESSIONAL • EASY TO USE</div>
+    <h1>Freelance <span class="gradient">Rate Calculator</span></h1>
+    <p>
+      Calculate a professional freelance rate based on your income goal,
+      working hours, expenses, taxes and profit buffer. Get hourly, daily,
+      monthly and yearly rate estimates in seconds.
+    </p>
+  </div>
+</section>
+
+<section id="calculator" class="container">
+<div class="calculator">
+
+  <div class="calc-top">
+    <h2>Calculate Your Ideal Freelance Rate</h2>
+    <p>Enter your details below. Your recommended rate will be calculated instantly.</p>
+  </div>
+
+  <div class="form">
+
+    <div class="field">
+      <label>Currency</label>
+      <select id="currency">
+        <option value="$">USD ($)</option>
+        <option value="€">EUR (€)</option>
+        <option value="£">GBP (£)</option>
+        <option value="₨">PKR (₨)</option>
+        <option value="₹">INR (₹)</option>
+        <option value="د.إ">AED (د.إ)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Desired Annual Income</label>
+      <input type="number" id="income" value="50000" min="0">
+    </div>
+
+    <div class="field">
+      <label>Working Hours Per Week</label>
+      <input type="number" id="hours" value="30" min="1">
+    </div>
+
+    <div class="field">
+      <label>Working Weeks Per Year</label>
+      <input type="number" id="weeks" value="48" min="1">
+    </div>
+
+    <div class="field">
+      <label>Annual Business Expenses</label>
+      <input type="number" id="expenses" value="3000" min="0">
+    </div>
+
+    <div class="field">
+      <label>Tax / Fee Percentage (%)</label>
+      <input type="number" id="tax" value="15" min="0" max="100">
+    </div>
+
+    <div class="field full">
+      <label>Profit / Safety Buffer (%)</label>
+      <input type="number" id="buffer" value="10" min="0" max="100">
+    </div>
+
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" onclick="calculate()">Calculate My Rate →</button>
+    <button class="btn secondary" onclick="resetCalc()">Reset</button>
+  </div>
+
+  <div class="results" id="results">
+
+    <div class="result-main">
+      <small>RECOMMENDED HOURLY RATE</small>
+      <strong id="hourly">$0.00</strong>
+      <span>Suggested minimum rate based on your information</span>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <span>Daily Rate</span>
+        <b id="daily">$0</b>
+      </div>
+
+      <div class="result-card">
+        <span>Weekly Rate</span>
+        <b id="weekly">$0</b>
+      </div>
+
+      <div class="result-card">
+        <span>Monthly Rate</span>
+        <b id="monthly">$0</b>
+      </div>
+
+      <div class="result-card">
+        <span>Yearly Rate</span>
+        <b id="yearly">$0</b>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<section id="features" class="section">
+<div class="container">
+<div class="section-title">
+  <h2>Everything You Need to Price Your Freelance Work</h2>
+  <p>Built for freelancers, consultants, creators and independent professionals.</p>
+</div>
+
+<div class="features">
+
+  <div class="feature">
+    <div class="icon">💰</div>
+    <h3>Income Goal</h3>
+    <p>Start with the annual income you want to earn from your freelance business.</p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">⏱️</div>
+    <h3>Working Hours</h3>
+    <p>Account for realistic weekly working hours instead of assuming every hour is billable.</p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">📊</div>
+    <h3>Business Expenses</h3>
+    <p>Include software, equipment, subscriptions and other professional expenses.</p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">🧾</div>
+    <h3>Tax & Fees</h3>
+    <p>Add an estimated percentage for taxes, payment fees and platform charges.</p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">🛡️</div>
+    <h3>Safety Buffer</h3>
+    <p>Build a professional financial buffer into your recommended freelance rate.</p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">🌍</div>
+    <h3>Multiple Currencies</h3>
+    <p>Choose from popular currencies and calculate your rate in the format you need.</p>
+  </div>
+
+</div>
+</div>
+</section>
+
+<section id="examples" class="section">
+<div class="container">
+
+<div class="section-title">
+  <h2>Simple Examples</h2>
+  <p>Not sure how to use the calculator? Here are practical examples.</p>
+</div>
+
+<div class="examples">
+
+<div class="example">
+<h3>Example 1 — Beginner</h3>
+<p>
+If your annual target is <strong>$30,000</strong>, you work 25 hours/week
+and 48 weeks/year, the calculator helps you determine a sustainable hourly rate.
+</p>
+</div>
+
+<div class="example">
+<h3>Example 2 — Experienced</h3>
+<p>
+If your target is <strong>$60,000</strong> with business expenses and taxes,
+your recommended rate will be higher than your basic income divided by hours.
+</p>
+</div>
+
+<div class="example">
+<h3>Example 3 — Consultant</h3>
+<p>
+Use a realistic number of billable hours and add a safety buffer to avoid
+underpricing your professional expertise.
+</p>
+</div>
+
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+
+<div class="section-title">
+<h2>How It Works</h2>
+<p>Three simple steps to find your professional rate.</p>
+</div>
+
+<div class="features">
+
+<div class="feature">
+<div class="icon">1</div>
+<h3>Enter Your Goal</h3>
+<p>Tell us how much you want to earn annually.</p>
+</div>
+
+<div class="feature">
+<div class="icon">2</div>
+<h3>Add Your Costs</h3>
+<p>Enter working hours, expenses, taxes and your desired safety buffer.</p>
+</div>
+
+<div class="feature">
+<div class="icon">3</div>
+<h3>Get Your Rate</h3>
+<p>Receive hourly, daily, weekly, monthly and yearly rate estimates instantly.</p>
+</div>
+
+</div>
+</div>
+</section>
+
+<section id="tools" class="section">
+<div class="container">
+
+<div class="section-title">
+<h2>More Free Tools</h2>
+<p>Explore more useful tools from AI Tools and Tech Hacks.</p>
+</div>
+
+<div class="tools">
+
+<a class="tool" href="#">
+<span>🧾 Invoice Generator</span>
+<small>Open →</small>
+</a>
+
+<a class="tool" href="#">
+<span>📄 CV Headline Generator</span>
+<small>Open →</small>
+</a>
+
+<a class="tool" href="#">
+<span>✍️ Caption Generator</span>
+<small>Open →</small>
+</a>
+
+<a class="tool" href="#">
+<span>📌 Pinterest Title Generator</span>
+<small>Open →</small>
+</a>
+
+<a class="tool" href="#">
+<span>🤖 AI Prompt Generator</span>
+<small>Open →</small>
+</a>
+
+<a class="tool" href="#">
+<span>🔢 Percentage Calculator</span>
+<small>Open →</small>
+</a>
+
+<a class="tool" href="#">
+<span>⏱️ Hourly ↔ Monthly Salary Calculator</span>
+<small>Open →</small>
+</a>
+
+<a class="tool" href="#">
+<span>📊 Profit Margin Calculator</span>
+<small>Open →</small>
+</a>
+
+<a class="tool" href="#">
+<span>📝 Word/Character Counter</span>
+<small>Open →</small>
+</a>
+
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+
+<div class="section-title">
+<h2>Frequently Asked Questions</h2>
+</div>
+
+<div class="faq">
+
+<details>
+<summary>What is a freelance rate?</summary>
+<p>A freelance rate is the amount a freelancer charges for their professional time or services. It can be hourly, daily, project-based or another pricing structure.</p>
+</details>
+
+<details>
+<summary>Why shouldn't I simply divide my desired income by working hours?</summary>
+<p>Freelancers also have business expenses, taxes, unpaid administrative time, holidays and other costs. This calculator helps you account for those factors.</p>
+</details>
+
+<details>
+<summary>Should I use every working hour as billable?</summary>
+<p>No. Freelancers normally spend some time on proposals, communication, administration, marketing and other non-billable work.</p>
+</details>
+
+<details>
+<summary>Can I change the currency?</summary>
+<p>Yes. Select your preferred currency before calculating your freelance rate.</p>
+</details>
+
+<details>
+<summary>Is this calculator financial advice?</summary>
+<p>No. The results are estimates for planning and informational purposes only. Consider your personal circumstances and professional advice where appropriate.</p>
+</details>
+
+</div>
+</div>
+</section>
+
+</main>
+
+<footer id="contact">
+<div class="container">
+
+<div class="footer-grid">
+
+<div>
+<h3>AI Tools and Tech Hacks</h3>
+<p>
+Helpful free online tools and practical technology resources designed
+for freelancers, creators, professionals and everyday users.
+</p>
+<br>
+<p><strong>Created by Chief</strong></p>
+</div>
+
+<div>
+<h3>Legal</h3>
+<a href="#" onclick="openModal('privacy');return false">Privacy Policy</a>
+<a href="#" onclick="openModal('terms');return false">Terms & Conditions</a>
+<a href="#" onclick="openModal('disclaimer');return false">Disclaimer</a>
+<a href="#" onclick="openModal('about');return false">About Us</a>
+</div>
+
+<div>
+<h3>Contact</h3>
+<a href="mailto:chief0000019@gmail.com">chief0000019@gmail.com</a>
+<a href="https://aitoolshacks01.blogspot.com" target="_blank">Website</a>
+</div>
+
+</div>
+
+<div class="copyright">
+© 2026 AI Tools and Tech Hacks. All Rights Reserved. | Created by Chief
+</div>
+
+</div>
+</footer>
+
+<!-- MODALS -->
+
+<div class="modal" id="privacy">
+<div class="modal-box">
+<button class="close" onclick="closeModal('privacy')">×</button>
+<h2>Privacy Policy</h2>
+<p>
+This website provides free online tools and informational content.
+We aim to respect user privacy. The Freelance Rate Calculator performs
+calculations within the browser and does not require users to create an account.
+Users should avoid entering sensitive personal or financial information.
+Third-party services, advertising providers or analytics services may have
+their own privacy policies.
+</p>
+</div>
+</div>
+
+<div class="modal" id="terms">
+<div class="modal-box">
+<button class="close" onclick="closeModal('terms')">×</button>
+<h2>Terms & Conditions</h2>
+<p>
+By using this website, you agree to use the tools only for lawful purposes.
+The tools are provided for general informational and educational purposes.
+You are responsible for verifying calculations and making your own business
+and financial decisions. We may update or modify the tools and content at any time.
+</p>
+</div>
+</div>
+
+<div class="modal" id="disclaimer">
+<div class="modal-box">
+<button class="close" onclick="closeModal('disclaimer')">×</button>
+<h2>Disclaimer</h2>
+<p>
+The Freelance Rate Calculator provides estimates and should not be considered
+professional financial, tax, accounting or legal advice. Actual freelance
+pricing depends on your market, experience, skills, location, clients,
+expenses and other circumstances.
+</p>
+</div>
+</div>
+
+<div class="modal" id="about">
+<div class="modal-box">
+<button class="close" onclick="closeModal('about')">×</button>
+<h2>About AI Tools and Tech Hacks</h2>
+<p>
+AI Tools and Tech Hacks provides practical free online tools designed to make
+common digital, freelance, productivity and business tasks easier.
+</p>
+<br>
+<p><strong>Founder / Creator: Chief</strong></p>
+<p>Email: chief0000019@gmail.com</p>
+<p>Website: aitoolshacks01.blogspot.com</p>
+</div>
+</div>
+
+<script>
+function formatMoney(value,currency){
+  return currency + Number(value).toLocaleString(undefined,{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function calculate(){
+
+  const currency=document.getElementById("currency").value;
+  const income=Math.max(0,Number(document.getElementById("income").value)||0);
+  const hours=Math.max(1,Number(document.getElementById("hours").value)||1);
+  const weeks=Math.max(1,Number(document.getElementById("weeks").value)||1);
+  const expenses=Math.max(0,Number(document.getElementById("expenses").value)||0);
+  const tax=Math.max(0,Number(document.getElementById("tax").value)||0);
+  const buffer=Math.max(0,Number(document.getElementById("buffer").value)||0);
+
+  const totalHours=hours*weeks;
+
+  /*
+    Base requirement includes desired income + expenses.
+    Buffer is then added.
+    Tax/fee percentage is grossed up so that the freelancer
+    keeps the required amount after the percentage deduction.
+  */
+
+  let required=income+expenses;
+  required=required*(1+buffer/100);
+
+  const taxFactor=Math.max(.01,1-(tax/100));
+  const grossRequired=required/taxFactor;
+
+  const hourly=grossRequired/totalHours;
+  const daily=hourly*8;
+  const weekly=hourly*hours;
+  const monthly=grossRequired/12;
+  const yearly=grossRequired;
+
+  document.getElementById("hourly").textContent=formatMoney(hourly,currency);
+  document.getElementById("daily").textContent=formatMoney(daily,currency);
+  document.getElementById("weekly").textContent=formatMoney(weekly,currency);
+  document.getElementById("monthly").textContent=formatMoney(monthly,currency);
+  document.getElementById("yearly").textContent=formatMoney(yearly,currency);
+
+  document.getElementById("results").classList.add("show");
+
+  document.getElementById("results").scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+}
+
+function resetCalc(){
+  document.getElementById("currency").value="$";
+  document.getElementById("income").value=50000;
+  document.getElementById("hours").value=30;
+  document.getElementById("weeks").value=48;
+  document.getElementById("expenses").value=3000;
+  document.getElementById("tax").value=15;
+  document.getElementById("buffer").value=10;
+  document.getElementById("results").classList.remove("show");
+}
+
+function toggleMenu(){
+  document.getElementById("navlinks").classList.toggle("open");
+}
+
+function openModal(id){
+  document.getElementById(id).style.display="block";
+}
+
+function closeModal(id){
+  document.getElementById(id).style.display="none";
+}
+
+window.onclick=function(e){
+  if(e.target.classList.contains("modal")){
+    e.target.style.display="none";
+  }
+};
+</script>
+
+</body>
+</html>
+```
